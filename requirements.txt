@@ -1,11 +1,11 @@
-PIL
+
 requests
-json
-os
+#json
+#os
 pandas
-sys
-re
-glob
+#sys
+#re
+#glob
 serpapi
 mysql.connector
 bs4
