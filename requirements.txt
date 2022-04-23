@@ -6,6 +6,7 @@ pandas
 #sys
 #re
 #glob
-serpapi
+google-search-results
 mysql.connector
 bs4
+pillow
