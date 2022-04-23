@@ -2,7 +2,9 @@ import streamlit as st
 import pandas as pd
 import json
 import requests
+import os
 import sys
+import re
 import glob
 from PIL import Image
 
@@ -30,16 +32,16 @@ SEARCH_TERMS = {'Italy':'italian','France':'french','United States of America':'
                  ,'Chile':'chilean','Jordan':'jordanian','Panama':'panamanian','Kenya':'kenyan','Tunisia':'tunisian','Romania':'romanian','Czech Republic':'czech','Hungary':'hungarian'
                  ,'Cambodia':'cambodian','Oman':'omani','Ecuador':'ecuadorian'}
 
+@st.cache
+
 def get_country_data(country):
     country = country.replace(" ", "")
-    #response = requests.get('https://countriesstats-8fc99-default-rtdb.firebaseio.com/'+country+'.json')
     response = requests.get('https://dsci551-countriesdb-default-rtdb.firebaseio.com/'+country+'.json')
     response.text
     return response.json()
 
 def countries_blurb(country):
     r1 = get_country_data(country)
-    blurb = ''
     for key, value in r1.items():
         if key == 'Country Description':
             blurb = value
@@ -47,15 +49,20 @@ def countries_blurb(country):
 
 def countries_capital(country):
     r1 = get_country_data(country)
-    capital = ''
     for key, value in r1.items():
         if key == 'Capital':
             capital = value
     return capital
+    
+def countries_slogan(country):
+    r1 = get_country_data(country)
+    for key, value in r1.items():
+        if key == 'Tourism Slogan':
+            slogan = ('Tourism Slogan: '+value)
+    return slogan    
 
 def countries_population(country):
     r1 = get_country_data(country)
-    population = ''
     for key, value in r1.items():
         if key == 'Population':
             population = value
@@ -64,25 +71,35 @@ def countries_population(country):
 # displays country's blurb and "Tell Me More" button 
 # button here is functional and will simply add "Food" and "Events" section to page
 def display_country(country):
-    col1, col2 = st.columns(2)
+    st.subheader(countries_slogan(country))
+    col1, col2 = st.columns([1,2])
     with col1:
-        st.image('static/flags/' + country + '.png')  
+        flag = Image.open('static/flags/' + country + '.png')
+        rflag = flag.resize((250,150))
+        st.image(rflag)
+          
     with col2:
         st.markdown(countries_blurb(country))
         bt = st.button('Tell Me More About ' + country)
     if bt:
-        st.header('National Foods')
-        for food_image in glob.glob('static/dishes/' + country.replace(" ", "") + '*'):
-            st.image(food_image)
+        st.header('National Dishes')
+        food_images = glob.glob('static/dishes/' + country.replace(" ", "") + '*')
+        for food_image in food_images:
+            with open(food_image,"rb") as file:
+                img = Image.open(file)
+                rimg = img.resize((300,200)) #make all images the same size
+                st.image(rimg)
+                food_name = os.path.basename(food_image) #extract name frim image name
+                dish_name = re.search('-(.*).jpeg',food_name)
+                st.markdown(dish_name.group(1))
+                st.write(' ')
+                
         st.header('Restaurants')
-        # basicSearch(SEARCH_TERMS[country] + ' food', 'Los Angeles, CA')
+        basicSearch(SEARCH_TERMS[country] + ' food', 'Los Angeles, CA')
         st.header('Events')
-        # search(SEARCH_TERMS[country] + ' events', 'Los Angeles, CA')
+        search(SEARCH_TERMS[country] + ' events', 'Los Angeles, CA')
         st.header('Landmarks')
-        # use yelp API along with city coordinates to gather landmarks
-        # tends to work a lot better for western countries only
-        
-        # getCoords(country,10,2)
+        getCoords(country, 10, 3)
 
 def app():
     # Title of the main page
