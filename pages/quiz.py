@@ -7,7 +7,7 @@ def app():
     col1, col2 = st.columns(2)
     col1.image(display, width = 450)
     col2.title('CulturEd')
-    col2.write('An educational platform built to inform the public on various cultures through food and local events')
+    col2.write('Test Your Knowledge!')
     
     st.title('Quiz')
 
