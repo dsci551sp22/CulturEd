@@ -126,4 +126,4 @@ def distributionSearch(location):
             lst.append(k)
             numToList -= 1
 
-    st.write("The most common common types of food in " + location + " are " + lst[0] + ", " + lst[1] + ", " + lst[2] + ", and " + lst[3] + ".")
+    st.write("The most common types of food in " + location + " are " + lst[0] + ", " + lst[1] + ", " + lst[2] + ", and " + lst[3] + ".")
