@@ -97,7 +97,7 @@ def display_country(country):
         st.header('Restaurants')
         basicSearch(SEARCH_TERMS[country] + ' food', 'Los Angeles, CA')
         st.header('Events')
-        #search(SEARCH_TERMS[country] + ' events', 'Los Angeles, CA')
+        search(SEARCH_TERMS[country] + ' events', 'Los Angeles, CA')
         st.header('Landmarks')
         getCoords(country, 10, 3)
 
