@@ -31,7 +31,10 @@ def search(term, location):
 
     search = GoogleSearch(params) 
     results = search.get_dict()
-    events_results = results['events_results']
+    try:
+        events_results = results['events_results']
+    except: 
+        st.write('No related events in this area.')
     st.write('Here are some events related to ' + term + ' :')
     showInterval(0,5,events_results)
 
