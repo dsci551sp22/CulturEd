@@ -35,6 +35,7 @@ def search(term, location):
         events_results = results['events_results']
     except: 
         st.write('No related events in this area.')
+        return
     st.write('Here are some events related to ' + term + ' :')
     showInterval(0,5,events_results)
 
